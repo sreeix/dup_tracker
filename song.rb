@@ -42,6 +42,5 @@ class Song
       @store[ name ] = value
       self.class.send(:define_method, name.downcase.gsub(" ","_").to_sym) { value} unless name.nil?
     end
-    puts @store["Name"]
   end
 end
