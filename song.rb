@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'nokogiri'
 # <dict>
 #       <key>Track ID</key><integer>15533</integer>
 #       <key>Name</key><string>In the Presence of Enemies Pt. 1</string>
@@ -30,5 +32,16 @@
 class Song
   def initialize(dict_xml)
     @keys=parse(dict_xml)
+  end
+  def parse(xml)
+    keys = xml.children.collect{ |node| node.children.first.text unless node.children.first.nil?}
+    size=keys.size
+    @store={ }
+    (0..size).step(3) do |index|
+      name=keys[index+1]; value=keys[index+2]
+      @store[ name ] = value
+      self.class.send(:define_method, name.downcase.gsub(" ","_").to_sym) { value} unless name.nil?
+    end
+    puts @store["Name"]
   end
 end
