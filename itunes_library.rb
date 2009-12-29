@@ -2,6 +2,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'song'
 class ItunesLibrary
+  attr_reader :songs
   def initialize(path)
     puts "reading the library"
     doc = Nokogiri::XML(IO.read(path))
@@ -14,10 +15,10 @@ class ItunesLibrary
   end
   
   def search(scope=:first, opt={})
-      
+    case scope
+      when :first then @songs.detect{|song| song.match? opt}
+      when :all   then @songs.select{|song| puts song;song.match? opt}
+    end
   end
 end
-
-lib=ItunesLibrary.new("data/music.xml")
-puts lib.number_of_songs
 

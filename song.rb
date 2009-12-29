@@ -1,5 +1,39 @@
 require 'rubygems'
 require 'nokogiri'
+
+class Song
+  
+  def initialize(dict_xml)
+    @keys=parse(dict_xml)
+  end
+    
+  def parse(xml)
+    keys = xml.children.collect{ |node| node.children.first.text unless node.children.first.nil?}
+    size=keys.size
+    @store={ }
+    (0..size).step(3) do |index|
+      name=keys[index+1]; value=keys[index+2]
+      @store[ name ] = value
+      self.metaclass.send(:define_method, name.strip.downcase.gsub(" ","_").to_sym) { value} unless name.nil?
+    end
+  end
+  def match?(opts={})
+    match=true
+    opts.each{|key,value| match&= (respond_to?(key) ? (self.send(key) == value) : false)}
+    match
+  end
+  
+  def metaclass
+    (class << self; self; end)
+  end
+  
+  def to_s
+    "#{name if respond_to?('name')}-#{artist if respond_to?('artist')}"
+  end
+  
+end
+
+
 # <dict>
 #       <key>Track ID</key><integer>15533</integer>
 #       <key>Name</key><string>In the Presence of Enemies Pt. 1</string>
@@ -29,18 +63,3 @@ require 'nokogiri'
 #       <key>Library Folder Count</key><integer>1</integer>
 #     </dict>
 
-class Song
-  def initialize(dict_xml)
-    @keys=parse(dict_xml)
-  end
-  def parse(xml)
-    keys = xml.children.collect{ |node| node.children.first.text unless node.children.first.nil?}
-    size=keys.size
-    @store={ }
-    (0..size).step(3) do |index|
-      name=keys[index+1]; value=keys[index+2]
-      @store[ name ] = value
-      self.class.send(:define_method, name.downcase.gsub(" ","_").to_sym) { value} unless name.nil?
-    end
-  end
-end
