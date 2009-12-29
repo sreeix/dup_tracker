@@ -2,8 +2,6 @@ require 'rubygems'
 require 'find'
 require 'hash'
 require 'json'
-require 'rexml/document'
-
 hash_store={}
 excludes = ["CVS","classes",".svn",".hg",".git"]
 
