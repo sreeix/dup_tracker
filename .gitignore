@@ -1,0 +1,3 @@
+gbin/*
+vendor/gems/*
+!vendor/gems/cache/

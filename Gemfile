@@ -1,3 +1,3 @@
 gem 'nokogiri'
-gem 'json'
+gem 'json_pure'
 bin_path 'gbin'

@@ -11,6 +11,7 @@ class Song
     keys = xml.children.collect{ |node| node.children.first.text unless node.children.first.nil?}
     size=keys.size
     @store={ }
+    # Big hack to deal with the bigger hack in the itunes file format.
     (0..size).step(3) do |index|
       name=keys[index+1]; value=keys[index+2]
       @store[ name ] = value
