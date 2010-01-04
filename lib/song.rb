@@ -20,7 +20,13 @@ class Song
   end
 
   def delete
-    @node.remove
+    puts "Deleting #{name}"
+
+    puts @node.to_xml
+    puts "Prev-> #{@node.previous.previous.to_xml}"
+    @node.previous.previous.remove
+    @node.remove 
+    
   end
   def metaclass
     (class << self; self; end)
@@ -38,12 +44,9 @@ class Song
       self.metaclass.send(:define_method, name.strip.downcase.gsub(" ","_").to_sym) { value} unless name.nil?
     end
   end
+
   def match_key?(key,value)
-    if value.kind_of? Proc
-      value.call(self.send(key))
-    else
-      (self.send(key) == value)
-    end
+    value.kind_of?(Proc) ? value.call(self.send(key)) : (self.send(key) == value)
   end
 
 

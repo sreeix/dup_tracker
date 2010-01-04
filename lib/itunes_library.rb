@@ -1,18 +1,20 @@
 require 'rubygems'
 require 'nokogiri'
-require File.join(File.dirname(__FILE__),'song')
+%w{song play_list}.each{|file| require File.join(File.dirname(__FILE__),file)}
 class ItunesLibrary
-  attr_reader :songs
+  attr_reader :songs, :play_lists
   def initialize(path)
     puts "reading the library"
     @path=path
     @doc = Nokogiri::XML(IO.read(path))
     refresh
-
   end
 
   def number_of_songs
     @songs.size
+  end
+  def number_of_lists
+    @play_lists.size
   end
 
   def save
@@ -31,6 +33,7 @@ class ItunesLibrary
   private
   def refresh
     @songs = @doc.root.xpath("//plist/dict/dict/dict").collect{|xml| Song.new(xml)}
+    @play_lists = @doc.root.xpath("//plist/dict/array/dict").collect{|xml| PlayList.new(xml)}
   end
 end
 
