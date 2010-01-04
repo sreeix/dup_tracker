@@ -2,11 +2,31 @@ require 'rubygems'
 require 'nokogiri'
 
 class Song
-  
+
   def initialize(dict_xml)
+    @node=dict_xml
     @keys=parse(dict_xml)
   end
-    
+
+  def match?(opts={})
+    match=true
+    opts.each do |key,value|
+      match&= (respond_to?(key) ? match_key?(key,value) : false)
+    end
+    match
+  end
+  def to_s
+    "#{name if respond_to?('name')}-#{artist if respond_to?('artist')}"
+  end
+
+  def delete
+    @node.remove
+  end
+  def metaclass
+    (class << self; self; end)
+  end
+
+  private
   def parse(xml)
     keys = xml.children.collect{ |node| node.children.first.text unless node.children.first.nil?}
     size=keys.size
@@ -18,20 +38,15 @@ class Song
       self.metaclass.send(:define_method, name.strip.downcase.gsub(" ","_").to_sym) { value} unless name.nil?
     end
   end
-  def match?(opts={})
-    match=true
-    opts.each{|key,value| match&= (respond_to?(key) ? (self.send(key) == value) : false)}
-    match
+  def match_key?(key,value)
+    if value.kind_of? Proc
+      value.call(self.send(key))
+    else
+      (self.send(key) == value)
+    end
   end
-  
-  def metaclass
-    (class << self; self; end)
-  end
-  
-  def to_s
-    "#{name if respond_to?('name')}-#{artist if respond_to?('artist')}"
-  end
-  
+
+
 end
 
 
