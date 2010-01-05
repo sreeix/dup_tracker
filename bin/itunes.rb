@@ -9,11 +9,11 @@ dt= lib.search :first, :artist=>"Dream Theater"
 puts dt
 puts dt.play_lists
 
-# tech= lib.search :all, :location=>Proc.new{|str| str.match URI::escape("Dream Theater")}
-# puts tech
-# tech.each{|item| item.delete}
-# lib.save
-# puts "saved"
+ tech= lib.search :all, :location=>Proc.new{|str| str.match URI::escape("Dream Theater")}
+ puts tech
+ tech.each{|item| item.delete}
+ lib.save
+ puts "saved"
 #  puts lib.number_of_songs
 # tech= lib.search :first, :location=>Proc.new{|str| str.match URI::escape("Dream Theater")}
 # puts tech

@@ -11,7 +11,9 @@ class PlayList
    end
 
   def delete(song)
-    @node.xpath("array/dict/integer/text() ='#{song.track_id}'").remove
+    track=@node.xpath("array/dict[integer ='#{song.track_id}']")
+    puts track.to_xml
+    track.remove
   end
    def to_s
     "#{@name} (#{size})"
@@ -20,7 +22,7 @@ class PlayList
    private
    def parse(song_list)
      @name=@node.children[2].text
-     @songs=@node.xpath("array/dict/integer").collect{|song_name| song_list.detect{ |song| song.track_id == song_name.text}}
+     @songs=@node.xpath("array/dict/integer").collect{|song_name| song_list.detect{ |song| song.track_id == song_name.text}} # extremely shitty code. needs some algorithm love
      @songs.each{|song| song.play_lists << self}
    end
 end

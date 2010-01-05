@@ -25,7 +25,7 @@ class Song
     puts "Deleting #{name}"
     @node.previous.previous.remove
     @node.remove
-
+    @play_lists.each{ |list| list.delete(self)}
   end
   def metaclass
     (class << self; self; end)
