@@ -3,9 +3,11 @@ require 'nokogiri'
 
 class Song
 
+  attr_reader :play_lists
   def initialize(dict_xml)
     @node=dict_xml
     @keys=parse(dict_xml)
+    @play_lists=[]
   end
 
   def match?(opts={})
@@ -21,12 +23,9 @@ class Song
 
   def delete
     puts "Deleting #{name}"
-
-    puts @node.to_xml
-    puts "Prev-> #{@node.previous.previous.to_xml}"
     @node.previous.previous.remove
-    @node.remove 
-    
+    @node.remove
+
   end
   def metaclass
     (class << self; self; end)

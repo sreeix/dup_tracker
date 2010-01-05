@@ -33,7 +33,7 @@ class ItunesLibrary
   private
   def refresh
     @songs = @doc.root.xpath("//plist/dict/dict/dict").collect{|xml| Song.new(xml)}
-    @play_lists = @doc.root.xpath("//plist/dict/array/dict").collect{|xml| PlayList.new(xml)}
+    @play_lists = @doc.root.xpath("//plist/dict/array/dict").collect{|xml| PlayList.new(xml,@songs)}
   end
 end
 
